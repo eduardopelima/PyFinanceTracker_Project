@@ -12,3 +12,12 @@ class Category(Base):
     name = Column(String, nullable = False)
     pub_date = Column(DateTime, default=func.now())
 
+#class Expense(Base):
+    #__tablename__ = "expenses"
+
+    #id = Column(Integer, primary_key=True)
+    #date = Column(DateTime)
+    #fk_category = 
+    #description: str
+    #value: int
+
