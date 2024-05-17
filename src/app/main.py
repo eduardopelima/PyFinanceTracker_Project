@@ -1,5 +1,8 @@
 from fastapi import FastAPI
-from .routes import routers
+from .routers import category, ai_response, expense
 
 app = FastAPI()
-app.include_router(routers)
+routers = [category, ai_response, expense]
+
+for r in routers:
+    app.include_router(r.router)

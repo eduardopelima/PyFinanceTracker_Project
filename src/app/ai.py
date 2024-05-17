@@ -68,6 +68,8 @@ class PromptExpense():
             based on the following user expense description in portuguese: {self.description}
 
             return to me ONLY the json filled with the description details i dont need schema properties details. The id should be sequencial, begging in 1.
+
+            THE RETURN MUST BE A JSON STRING THAT WILL BE PARSED TO A JSON OBJECT.
         """
 
         client = OpenAI(
@@ -76,7 +78,7 @@ class PromptExpense():
 
         chat_completion = client.chat.completions.create(
             model="gpt-3.5-turbo",
-            messages=[{"role": "user", "content": prompt}]
+            messages=[{"role": "user", "content": prompt}],
         )
 
         return chat_completion
