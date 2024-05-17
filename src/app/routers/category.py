@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from typing import List
 from sqlalchemy.orm import Session
 
-from ..models.db_config import get_db
+from ..database import get_db
 from ..models.category import Category
 from ..schemas.category import CategorySchema
 

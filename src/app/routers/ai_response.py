@@ -4,11 +4,12 @@ import json
 from datetime import datetime
 from sqlalchemy.orm import Session
 
-from ..models.db_config import get_db
-from ..schemas.ai_response import ChatCompletionSchema
+from ..database import get_db
+from ..chatgpt.schemas import ChatCompletionSchema
 from ..schemas.expense import ExpenseSchema
 from .category import list_categories
-from ..ai import PromptExpense
+from ..chatgpt.prompt import PromptExpense
+from ..models.ai_consumption import AiConsumption
 
 router = APIRouter()
 
@@ -36,16 +37,35 @@ def get_generativeai_expense(user_expense_description: str, db: Session = Depend
 
     #validated_data = ChatCompletionSchema(**aiResponse)
 
+    add_generativeai_ai_consumption(aiResponse, db)
+
     return aiResponse #aiResponse['choices']['message']['content']
 
-#@routers.post("/add/generativeai/ai_consumption", response_model=ChatCompletionSchema)
-#def add_generativeai_ai_consuption(db: Session = Depends(get_db), aiResponse):
+@router.post("/add/generativeai/ai_consumption", response_model=ChatCompletionSchema)
+def add_generativeai_ai_consumption(aiResponse: ChatCompletionSchema, db: Session = Depends(get_db)):
 
-#    id = aiResponse['id']
-#    created_at = aiResponse['created']
-#    model = aiResponse['model']
-#    usageCompletionTokens = aiResponse['usage']['completion_tokens']
-#    promptTokens = aiResponse['usage']['prompt_tokens']
-#    totalTokens = aiResponse['usage']['total_tokens']
+    id = aiResponse.id
+    created = aiResponse.created
+    model = aiResponse.model
+    usageCompletionTokens = aiResponse.usage.completion_tokens
+    promptTokens = aiResponse.usage.prompt_tokens
+    totalTokens = aiResponse.usage.total_tokens
 
-#    return aiResponse
+    
+
+    test = {
+        'id': id,
+        'created': created,
+        'model': model,
+        'usage_completion_tokens': usageCompletionTokens,
+        'prompt_tokens': promptTokens,
+        'total_tokens': totalTokens
+    }
+
+    print(test)
+
+    db_ai_consumption = AiConsumption(**test)
+    db.add(db_ai_consumption)
+    db.commit()
+    db.refresh(db_ai_consumption)
+    return db_ai_consumption

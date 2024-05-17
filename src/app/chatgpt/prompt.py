@@ -1,8 +1,4 @@
-import os
-from openai import OpenAI
-from dotenv import load_dotenv, find_dotenv
-
-load_dotenv(find_dotenv())
+from .client import client
 
 class PromptExpense():
 
@@ -71,10 +67,6 @@ class PromptExpense():
 
             THE RETURN MUST BE A JSON STRING THAT WILL BE PARSED TO A JSON OBJECT.
         """
-
-        client = OpenAI(
-            api_key=os.environ.get("OPENAI_API_KEY")
-        )
 
         chat_completion = client.chat.completions.create(
             model="gpt-3.5-turbo",
