@@ -8,12 +8,14 @@ from ..chatgpt.schemas import ChatCompletionSchema
 from ..schemas.expense import ExpenseSchema
 from .category import list_categories
 from ..chatgpt.prompt import PromptExpense
+from ..models.expense import Expense
 from ..models.ai_consumption import AiConsumption
+from ..routers.expense import add_expense
 
 router = APIRouter()
 
-@router.get("/get/generativeai/expense")
-def get_generativeai_expense(user_expense_description: str, db: Session = Depends(get_db)):
+@router.post("/add/generativeai/expense")
+def add_generativeai_expense(user_expense_description: str, db: Session = Depends(get_db)):
     
     categoriesList = list_categories(db)
     current_datetime = datetime.now()
@@ -40,7 +42,10 @@ def get_generativeai_expense(user_expense_description: str, db: Session = Depend
 
     expensesList = json.loads(aiResponse.choices[0].message.content)
 
-    return expensesList
+    for expense in expensesList:
+        add_expense(expense, db)
+
+    return aiResponse
 
 @router.post("/add/generativeai/ai_consumption", response_model=ChatCompletionSchema)
 def add_generativeai_ai_consumption(aiResponse: ChatCompletionSchema, db: Session = Depends(get_db)):

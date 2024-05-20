@@ -8,8 +8,9 @@ from ..schemas.expense import ExpenseSchema
 router = APIRouter()
 
 @router.post("/add/expense", response_model=ExpenseSchema)
-def add_generativeai_expense(expense: ExpenseSchema, db: Session = Depends(get_db)):
-    db_category = Expense(**expense.model_dump())
+def add_expense(expense: ExpenseSchema, db: Session = Depends(get_db)):
+    #db_category = Expense(**expense.model_dump())
+    db_category = Expense(**expense)
     db.add(db_category)
     db.commit()
     db.refresh(db_category)
