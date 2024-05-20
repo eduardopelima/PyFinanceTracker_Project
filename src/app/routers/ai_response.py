@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Depends
-from typing import List
 import json
 from datetime import datetime
 from sqlalchemy.orm import Session
@@ -39,7 +38,9 @@ def get_generativeai_expense(user_expense_description: str, db: Session = Depend
 
     add_generativeai_ai_consumption(aiResponse, db)
 
-    return aiResponse #aiResponse['choices']['message']['content']
+    expensesList = json.loads(aiResponse.choices[0].message.content)
+
+    return expensesList
 
 @router.post("/add/generativeai/ai_consumption", response_model=ChatCompletionSchema)
 def add_generativeai_ai_consumption(aiResponse: ChatCompletionSchema, db: Session = Depends(get_db)):
@@ -51,8 +52,6 @@ def add_generativeai_ai_consumption(aiResponse: ChatCompletionSchema, db: Sessio
     promptTokens = aiResponse.usage.prompt_tokens
     totalTokens = aiResponse.usage.total_tokens
 
-    
-
     test = {
         'id': id,
         'created': created,
@@ -61,8 +60,6 @@ def add_generativeai_ai_consumption(aiResponse: ChatCompletionSchema, db: Sessio
         'prompt_tokens': promptTokens,
         'total_tokens': totalTokens
     }
-
-    print(test)
 
     db_ai_consumption = AiConsumption(**test)
     db.add(db_ai_consumption)

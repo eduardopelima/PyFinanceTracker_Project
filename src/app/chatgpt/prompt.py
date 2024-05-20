@@ -1,4 +1,5 @@
 from .client import client
+import json
 
 class PromptExpense():
 
@@ -20,6 +21,7 @@ class PromptExpense():
             {
                 'id': 1,
                 'date': '2024-05-01 20:53:23',
+                'recurrency': 'false',
                 'fk_category': 1,
                 'description': 'ingresso do cinema',
                 'value': 20
@@ -27,6 +29,7 @@ class PromptExpense():
             {
                 'id': 2,
                 'date': '2024-05-01 20:53:23',
+                'recurrency': 'false',
                 'fk_category': 1,
                 'description': 'pipoca no cinema',
                 'value': 50
@@ -34,6 +37,7 @@ class PromptExpense():
             {
                 'id':3,
                 'date': '2024-05-01 20:53:23',
+                'recurrency': 'false',
                 'fk_category': 2,
                 'description': 'compras no mercado voltando do cinema',
                 'value': 400
@@ -41,6 +45,7 @@ class PromptExpense():
             {
                 'id':4,
                 'date': '2024-05-01 20:53:23',
+                'recurrency': 'false',
                 'fk_category': 3,
                 'description': 'gasolina voltando do cinema e compras',
                 'value': 20
@@ -70,7 +75,10 @@ class PromptExpense():
 
         chat_completion = client.chat.completions.create(
             model="gpt-3.5-turbo",
-            messages=[{"role": "user", "content": prompt}],
+            messages=[
+                {"role": "system", "content": "Provide output in a list with valid JSONs, where the data schema should be like this: "+json.dumps(self.output_schema)},
+                {"role": "system", "content": prompt}
+                ],
         )
 
         return chat_completion
