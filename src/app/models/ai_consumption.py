@@ -1,7 +1,6 @@
 from sqlalchemy.orm import declarative_base
 from sqlalchemy import Column, String, Integer
-
-Base = declarative_base()
+from ..database import Base
 
 class AiConsumption(Base):
     __tablename__ = "ai_consumption"
