@@ -11,4 +11,4 @@ class ExpenseSchema(BaseModel):
     value: Decimal = Field(decimal_places=2)
 
     class Config:
-        orm_mode = True
+        from_attributes = True

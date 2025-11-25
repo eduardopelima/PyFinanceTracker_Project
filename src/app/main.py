@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from .routers import category, ai_response, expense
+from app.routers import category, ai_response, expense
 
 app = FastAPI()
 routers = [category, ai_response, expense]
